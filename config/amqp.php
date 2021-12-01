@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'use' => env('AMQP_ENV', 'production'),
+    'use' => env('AMQP_ENV', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -27,7 +27,7 @@ return [
             'connect_options'       => [],
             'ssl_options'           => [],
 
-            'exchange'              => 'amq.topic',
+            'exchange'              => 'common',
             'exchange_type'         => 'topic',
             'exchange_passive'      => false,
             'exchange_durable'      => true,
@@ -60,11 +60,11 @@ return [
         ],
 
         'local' => [
-            'host'                  => env('AMQP_HOST', 'localhost'),
-            'port'                  => env('AMQP_PORT', 5672),
-            'username'              => env('AMQP_USER', 'guest'),
-            'password'              => env('AMQP_PASSWORD', 'guest'),
-            'vhost'                 => env('AMQP_VHOST', '/'),
+            'host'                  => env('AMQP_LOCAL_HOST', 'localhost'),
+            'port'                  => env('AMQP_LOCAL_PORT', 5672),
+            'username'              => env('AMQP_LOCAL_USER', 'guest'),
+            'password'              => env('AMQP_LOCAL_PASSWORD', 'guest'),
+            'vhost'                 => env('AMQP_LOCAL_VHOST', '/'),
             'connect_options'       => [],
             'ssl_options'           => [],
 

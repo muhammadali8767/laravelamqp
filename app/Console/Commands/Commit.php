@@ -3,59 +3,46 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Bschmitt\Amqp\Publisher;
 
 class Commit extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'commit';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    protected $signature = 'amqp:commit';
     protected $description = 'Command description';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
         $message  = json_encode([
-            "request_id" => "1",
-            "method_name" => "CLAIM_INFO_ETP",
-            "payload" => [
-                "data" => "some_string",
-            ],
+            "ETP_ID" => 4,
+            "REQUEST_ID" => 555111,
+            "METHOD_NAME" => "PING",
+            "PAYLOAD" => [
+                "data" => "some_string"
+            ]
         ]);
 
-        $response = $this->queue_rpc('xt.request', $message);
+        $response = $this->queue_rpc('xt.request', $message, 10); // -> pong
         var_dump($response->getBody());
     }
 
-    public function queue_rpc($queue, $message, $timeout = 0) {
+    public function queue_rpc($queue, $message, $timeout = 0)
+    {
         /* @var Bschmitt\Amqp\Publisher $publisher */
         $publisher = app()->make('Bschmitt\Amqp\Publisher');
         $publisher->connect();
         $publisher->getConnection()->set_close_on_destruct();
-        list($replyTo, ,) = $publisher->getChannel()->queue_declare('', false, false, true, true);
-        $replyTo = "xt_in";
+        $replyTo = $publisher->getChannel()->queue_declare(
+            'xt.responce',
+            false,
+            false,
+            true,
+            true
+        );
+        $replyTo = $replyTo[0];
         $publisher->getChannel()->queue_declare(
             $queue,
             false,
@@ -80,10 +67,10 @@ class Commit extends Command
             new \Bschmitt\Amqp\Message(
                 $message,
                 [
-                    'request_id' => 1,
-                    'method_name' => 'ping',
+                    'routing_key' => $queue,
+                    'content_type' => 'text/plain',
+                    'delivery_mode' => 2,
                     'reply_to' => $replyTo,
-                    'payload' => '{"data": "some_string"}',
                 ]
             ),
             'common',
