@@ -26,7 +26,7 @@ class Consume extends Command
                 new AMQPMessage(
                     $response,
                     [
-                        'content_type' => 'text/plain',
+                        'content_type' => 'application/json',
                         'delivery_mode' => 1,
                         'correlation_id' => $correlationId
                     ]
@@ -57,8 +57,8 @@ class Consume extends Command
                     new AMQPMessage(
                         $response,
                         [
-                            'content_type' => 'text/plain',
-                            'delivery_mode' => 1,
+                            'content_type' => 'application/json',
+                            'delivery_mode' => 2,
                             'correlation_id' => $correlationId
                         ]
                     ),

@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'use' => env('AMQP_ENV', 'local'),
+    'use' => 'production',//env('AMQP_ENV', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -30,7 +30,7 @@ return [
             'exchange'              => 'common',
             'exchange_type'         => 'topic',
             'exchange_passive'      => false,
-            'exchange_durable'      => true,
+            // 'exchange_durable'      => true,
             'exchange_auto_delete'  => false,
             'exchange_internal'     => false,
             'exchange_nowait'       => false,
@@ -38,7 +38,7 @@ return [
 
             'queue_force_declare'   => false,
             'queue_passive'         => false,
-            'queue_durable'         => true,
+            // 'queue_durable'         => true,
             'queue_exclusive'       => false,
             'queue_auto_delete'     => false,
             'queue_nowait'          => false,
